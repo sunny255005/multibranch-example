@@ -33,9 +33,9 @@ pipeline{
         {
             steps{
             sh 'node --version'
-           sh 'npm install'
+//            sh 'npm install'
      
-            sh 'ng build'
+//             sh 'ng build'
         }
         }
         stage("aws cp")
