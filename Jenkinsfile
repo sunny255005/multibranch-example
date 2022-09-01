@@ -72,7 +72,7 @@ pipeline {
             }
         }
        
-        stage('Confirm') {
+        stage('Confirm for Invalidate Cache For CLOUDFRONT') {
             steps {
                 input("Do you want to proceed invalidate cache CLOUDFRONT in ${user_env_input} environment?")
             }
