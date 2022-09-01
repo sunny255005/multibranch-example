@@ -45,7 +45,7 @@ pipeline {
                         sh 'echo building in Development environment'
                         sh 'node --version'
                         sh 'npm install'
-                        sh 'npm run build-dev'
+                        sh 'ng build'
                     }
 
                 }
