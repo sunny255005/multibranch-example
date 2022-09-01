@@ -1,23 +1,23 @@
-pipeline{
-    
+pipeline {
     agent any
-    tools {nodejs "NODEJS"} 
-    environment{
-        user_env_input = "Development"
+    tools {
+        nodejs 'NODEJS'
     }
-    
-    stages{
-        
-        
+    environment {
+        user_env_input = 'Development'
+    }
+
+    stages {
+
         stage('Which environment to build?') {
             steps {
                 script {
                     def userInput = input(id: 'userInput', message: 'Deploy to?',
-                    parameters: [[$class: 'ChoiceParameterDefinition', defaultValue: 'Development', 
-                        description:'Environment choices', name:'denv', choices: "Development\nProduction\nTesting"]
+                    parameters: [[$class: 'ChoiceParameterDefinition', defaultValue: 'Development',
+                        description:'Environment choices', name:'denv', choices: 'Development\nTesting']
                     ])
                     user_env_input = userInput
-                    //Use this value to branch to different logic if needed
+                //Use this value to branch to different logic if needed
                 }
             }
         }
@@ -25,43 +25,86 @@ pipeline{
             steps {
                 input("Do you want to proceed building in ${user_env_input} environment?")
             }
-        }       
-        
-        
-       
-        stage("build")
-        {
-            steps{
-            sh 'node --version'
-           sh 'npm install'
-     
-            sh 'ng build'
         }
-        }
-        stage("aws cp")
+
+      
+        stage('Build UI application')
         {
-            steps{            
+            steps {
 
+                script {
+                    
 
-script{
+                     if (user_env_input == 'Testing') {
+                        sh 'echo building in Testing  environment'
+                        sh 'node --version'
+                        sh 'npm install'
+                        sh 'ng build'
+                    }
+                    else {
+                        sh 'echo building in Development environment'
+                        sh 'node --version'
+                        sh 'npm install'
+                        sh 'ng build'
+                    }
 
-if (user_env_input == "Production") {
-    sh 'echo copying to s3 bucket prod env'
-}
-
-else if (user_env_input == "Testing") {
-   sh 'echo copying to s3 bucket test env'
-}
-else {
-    sh 'echo copying to s3 bucket dev env'
-}
-
-
-
+                }
 
             }
         }
+        stage('Upload to s3 buckets')
+        {
+            steps {
+
+                script {
+                    
+
+                     if (user_env_input == 'Testing') {
+                        sh 'echo upload to s3 bucket in  Testing env'
+                       
+                    }
+                    else {
+                        sh 'echo upload to s3 bucket in  Development env'
+                        
+                    }
+
+                }
+            }
+        }
+       
+        stage('Confirm for Invalidate Cache For CLOUDFRONT') {
+            steps {
+                input("Do you want to proceed invalidate cache CLOUDFRONT in ${user_env_input} environment?")
+            }
+        }
+        
+        stage('Invalidate cache in cloudfront')
+    {
+            steps {
+                script {
+                    
+                   if (user_env_input == 'Testing') {
+                        sh 'echo invalidate cache in Testing env'
+                        
+                        
+                    }
+                    else {
+                        sh 'echo invalidate cache in Development env'
+                         
+                       
+                    }
+
+                }
+            }
     }
-    
+
+     stage("clean ws")
+        {
+            steps{
+            cleanWs deleteDirs: true, notFailBuild: true
+        }
+        }
+
+
     }
 }
