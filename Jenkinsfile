@@ -93,6 +93,8 @@ pipeline {
 
 
         stage("checking"){
+            steps{
+                script{
                if(is_invalidate_cache_cloudfront=='Yes')
                {
                
@@ -117,9 +119,10 @@ pipeline {
     }
                
         	
-
+               }
                 
                }
+        }
         }
 
     
