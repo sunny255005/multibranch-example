@@ -87,15 +87,14 @@ pipeline {
                     is_invalidate_cache_cloudfront=is_invalidate_cache_cloudfront_parameter
 
 
-                     when { 
-            expression {
-                return 'Yes'
+                      when {
+                expression {
+                    return params.DEBUG
+                }
             }
-        }
-        steps {
-            echo "Hello, bitwiseman!" // Step executes only when Deploy is true
-
-        }
+            steps {
+                echo "Hello World!"
+            }
 
                }}}
 
