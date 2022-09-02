@@ -21,7 +21,7 @@ pipeline {
                     
                     
                     user_env_input = userInput
-                    is_invalidate_cache_cloudfront=s_invalidate_cache_cloudfront_parameter
+                    
                     
                 //Use this value to branch to different logic if needed
                 }
@@ -86,6 +86,7 @@ pipeline {
                     parameters: [[$class: 'ChoiceParameterDefinition', defaultValue: 'No',
                         description:'Environment choices', name:'invalidate_cf_params', choices: 'Yes\nNo']
                     ])
+                    is_invalidate_cache_cloudfront=s_invalidate_cache_cloudfront_parameter
                if(is_invalidate_cache_cloudfront=='Yes')
                {
                stages{
