@@ -1,10 +1,9 @@
 pipeline {
     agent any
-    tools {
-        nodejs 'NODEJS'
-    }
+    
     environment {
         user_env_input = 'Development'
+        is_invalidate_cache_cloudfront='No'
     }
 
     stages {
@@ -16,7 +15,12 @@ pipeline {
                     parameters: [[$class: 'ChoiceParameterDefinition', defaultValue: 'Development',
                         description:'Environment choices', name:'denv', choices: 'Development\nTesting']
                     ])
+                    
+                    
+                    
                     user_env_input = userInput
+                    
+                    
                 //Use this value to branch to different logic if needed
                 }
             }
@@ -37,15 +41,13 @@ pipeline {
 
                      if (user_env_input == 'Testing') {
                         sh 'echo building in Testing  environment'
-                        sh 'node --version'
-                        sh 'npm install'
-                        sh 'ng build'
+                       
+                       
                     }
                     else {
                         sh 'echo building in Development environment'
-                        sh 'node --version'
-                        sh 'npm install'
-                        sh 'ng build'
+                      
+                       
                     }
 
                 }
@@ -61,7 +63,7 @@ pipeline {
 
                      if (user_env_input == 'Testing') {
                         sh 'echo upload to s3 bucket in  Testing env'
-                       
+                        
                     }
                     else {
                         sh 'echo upload to s3 bucket in  Development env'
@@ -71,32 +73,70 @@ pipeline {
                 }
             }
         }
-       
-        stage('Confirm for Invalidate Cache For CLOUDFRONT') {
+
+
+
+    stage('Confirm for Invalidate Cache For CLOUDFRONT') {
             steps {
-                input("Do you want to proceed invalidate cache CLOUDFRONT in ${user_env_input} environment?")
-            }
-        }
-        
-        stage('Invalidate cache in cloudfront')
-    {
-            steps {
-                script {
+                 
+               script{
+                   def is_invalidate_cache_cloudfront_parameter = input(id: 'is_invalidate_cache_cloudfront', message: 'Do you want to invalidate cache in cloudfront?',
+                    parameters: [[$class: 'ChoiceParameterDefinition', defaultValue: 'Yes',
+                        description:'Environment choices', name:'invalidate_cf_params', choices: 'Yes\nNo']
+                    ])
                     
-                   if (user_env_input == 'Testing') {
-                        sh 'echo invalidate cache in Testing env'
+                   
+                    is_invalidate_cache_cloudfront=is_invalidate_cache_cloudfront_parameter
+
+
+                  
+
+               }}}
+
+
+               stage("Invalidating cache cloudfront")
+               {
+                   when {
+         expression { is_invalidate_cache_cloudfront == "Yes" }
+     }
+     steps {
+         echo "Hello, bitwiseman!"
+         script {
+                    
+
+                     if (user_env_input == 'Testing') {
+                        sh 'echo invalidate cache in cloudfront in  Testing env'
+                          withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws creds']]) {
+                             sh 'aws --version'
+                       
                         
+                         }
                         
                     }
                     else {
-                        sh 'echo invalidate cache in Development env'
-                         
+                        sh 'echo invalidate cache in cloudfront in  Development env'
+                         withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws creds']]) {
+                             sh 'aws --version'
                        
+                        
+                         }
+                        
                     }
 
                 }
-            }
-    }
+         
+     }
+               }
+
+
+
+        
+        
+
+
+
+    
+
 
      stage("clean ws")
         {
@@ -104,7 +144,6 @@ pipeline {
             cleanWs deleteDirs: true, notFailBuild: true
         }
         }
-
-
-    }
+           
 }
+    }
