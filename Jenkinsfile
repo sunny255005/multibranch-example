@@ -89,14 +89,17 @@ pipeline {
                     is_invalidate_cache_cloudfront=is_invalidate_cache_cloudfront_parameter
 
 
-                    if( params.invalidate_cf_params== 'yes') {
-    steps {
-                echo "Hello World!"
-            }
-}
-            
+                  
 
                }}}
+
+
+               stage("Invalidating cache cloudfront")
+               {
+                    when (params. invalidate_cf_params== 'yes') {
+        echo 'Excecuted only on master branch.'
+    }
+               }
 
 
 
