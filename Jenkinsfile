@@ -87,9 +87,13 @@ pipeline {
                         description:'Environment choices', name:'invalidate_cf_params', choices: 'Yes\nNo']
                     ])
                     is_invalidate_cache_cloudfront=is_invalidate_cache_cloudfront_parameter
+
+               }}}
+
+
                if(is_invalidate_cache_cloudfront=='Yes')
                {
-               stages{
+               
                        stage('Invalidate cache in cloudfront')
     {
             steps {
@@ -110,37 +114,27 @@ pipeline {
             }
     }
 
+        	
+
+                
+               }
+
+
+    
+        
+
+
+
+    
+
+
      stage("clean ws")
         {
             steps{
             cleanWs deleteDirs: true, notFailBuild: true
         }
         }
-               }	
-
-                
-               }
-
-
-    else{
-            	stages
-         {
-            	stage("clean ws")
-        {
-            steps{
-            cleanWs deleteDirs: true, notFailBuild: true
-        }
-        }
-         }
-        	
-
-        }
-        }
-        }
-
-
-
-    }
+           
 }
     }
 
