@@ -86,7 +86,7 @@ pipeline {
                     parameters: [[$class: 'ChoiceParameterDefinition', defaultValue: 'No',
                         description:'Environment choices', name:'invalidate_cf_params', choices: 'Yes\nNo']
                     ])
-                    is_invalidate_cache_cloudfront=s_invalidate_cache_cloudfront_parameter
+                    is_invalidate_cache_cloudfront=is_invalidate_cache_cloudfront_parameter
                if(is_invalidate_cache_cloudfront=='Yes')
                {
                stages{
