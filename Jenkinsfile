@@ -86,7 +86,7 @@ pipeline {
                     // ])
                     parameters {
         booleanParam(name: "invalidate_cf_params", defaultValue: true)
-    }
+    })
                     is_invalidate_cache_cloudfront=is_invalidate_cache_cloudfront_parameter
 
 
