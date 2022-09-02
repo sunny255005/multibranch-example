@@ -89,7 +89,7 @@ pipeline {
                     is_invalidate_cache_cloudfront=is_invalidate_cache_cloudfront_parameter
 
 
-                    when {
+                    if {
     expression { 
         params.invalidate_cf_params== 'yes'
       
