@@ -112,6 +112,7 @@ pipeline {
         }
         }
             	}
+               }
             	else{
             	stages{
             	stage("clean ws")
@@ -131,4 +132,4 @@ pipeline {
     }
 }
     }
-}
+
