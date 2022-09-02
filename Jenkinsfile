@@ -89,7 +89,7 @@ pipeline {
                     is_invalidate_cache_cloudfront=is_invalidate_cache_cloudfront_parameter
                if(is_invalidate_cache_cloudfront=='Yes')
                {
-               
+               stages{
                        stage('Invalidate cache in cloudfront')
     {
             steps {
@@ -116,20 +116,22 @@ pipeline {
             cleanWs deleteDirs: true, notFailBuild: true
         }
         }
-            	
+               }	
 
                 
                }
 
 
     else{
-            	
+            	stages
+         {
             	stage("clean ws")
         {
             steps{
             cleanWs deleteDirs: true, notFailBuild: true
         }
         }
+         }
         	
 
         }
