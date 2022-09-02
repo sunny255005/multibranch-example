@@ -91,6 +91,8 @@ pipeline {
                }}}
 
 
+
+        stage("checking"){
                if(is_invalidate_cache_cloudfront=='Yes')
                {
                
@@ -113,12 +115,12 @@ pipeline {
                 }
             }
     }
-
+               
         	
 
                 
                }
-
+        }
 
     
         
