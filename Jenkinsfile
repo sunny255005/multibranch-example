@@ -1,8 +1,6 @@
 pipeline {
     agent any
-    tools {
-        nodejs 'NODEJS'
-    }
+    
     environment {
         user_env_input = 'Development'
         is_invalidate_cache_cloudfront='No'
@@ -43,12 +41,12 @@ pipeline {
 
                      if (user_env_input == 'Testing') {
                         sh 'echo building in Testing  environment'
-                        sh 'node --version'
+                       
                        
                     }
                     else {
                         sh 'echo building in Development environment'
-                        sh 'node --version'
+                      
                        
                     }
 
@@ -88,44 +86,22 @@ pipeline {
                     ])
                     is_invalidate_cache_cloudfront=is_invalidate_cache_cloudfront_parameter
 
+
+                     when { 
+            expression {
+                return 'Yes'
+            }
+        }
+        steps {
+            echo "Hello, bitwiseman!" // Step executes only when Deploy is true
+
+        }
+
                }}}
 
 
 
-        stage("checking"){
-            steps{
-                script{
-               if(is_invalidate_cache_cloudfront=='Yes')
-               {
-               
-                       stage('Invalidate cache in cloudfront')
-    {
-            steps {
-                script {
-                    
-                   if (user_env_input == 'Testing') {
-                        sh 'echo invalidate cache in Testing env'
-                       
-                        
-                    }
-                    else {
-                        sh 'echo invalidate cache in Development env'
-                         
-                       
-                    }
-
-                }
-            }
-    }
-               
-        	
-               }
-                
-               }
-        }
-        }
-
-    
+        
         
 
 
