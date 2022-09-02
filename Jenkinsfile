@@ -1,115 +1,57 @@
 pipeline {
-    agent any
-    tools {
-        nodejs 'NODEJS'
-    }
-    environment {
-        user_env_input = 'Development'
-    }
+    agent {label 'windows'}
 
     stages {
-
-        stage('Which environment to build?') {
+        stage('Quick Build') {
             steps {
-                script {
-                    def userInput = input(id: 'userInput', message: 'Deploy to?',
-                    parameters: [[$class: 'ChoiceParameterDefinition', defaultValue: 'Development',
-                        description:'Environment choices', name:'denv', choices: 'Development\nProduction\nTesting']
-                    ])
-                    user_env_input = userInput
-                //Use this value to branch to different logic if needed
+                echo 'Building'
+            }
+        }
+        stage('Deploy to Dev') {
+            // when {
+            //     branch 'develop' 
+            // }
+            stages {
+                stage('Building Distributable Package') {
+                    steps {
+                        echo 'Building'
+                    }
+                }
+                stage('Archiving Package') {
+                    steps {
+                        echo 'Archiving Aritfacts'
+                       
+                    }
+                }
+                stage('Deploying Dev') {
+                    steps {
+                        echo 'Deploying'
+                       
+                    }
+                }
+            }
+             }
+        stage('Deploy to Test') {
+            when {
+                branch 'develop' 
+            }
+            steps {
+                echo 'deploying..'
+                timeout(time:3, unit:'DAYS') {
+                    input message: "Approve build?"
                 }
             }
         }
-        stage('Confirm') {
-            steps {
-                input("Do you want to proceed building in ${user_env_input} environment?")
+        stage('Deploy to Prod') {
+            when {
+                branch 'release' 
             }
-        }
-
-       
-        stage('Build UI application')
-        {
             steps {
-
-                script {
-                    if (user_env_input == 'Production') {
-                        sh 'echo building in Production environment'
-                        sh 'node --version'
-                     
-                    }
-
-                    else if (user_env_input == 'Testing') {
-                        sh 'echo building in Testing  environment'
-                        sh 'node --version'
-                        
-                    }
-                    else {
-                        sh 'echo building in Development environment'
-                        sh 'node --version'
-                      
-                    }
-
+                timeout(time:3, unit:'DAYS') {
+                    input message: "Deploy to Prod?"
                 }
-
+                echo 'Deploying....'
             }
         }
-        stage('Upload to s3 buckets')
-        {
-            steps {
-
-                script {
-                    if (user_env_input == 'Production') {
-                        sh 'echo upload to s3 bucket in Production env'
-                       
-
-                    
-                    }
-
-                    else if (user_env_input == 'Testing') {
-                        sh 'echo upload to s3 bucket in  Testing env'
-                        
-                    }
-                    else {
-                        sh 'echo upload to s3 bucket in  Development env'
-                       
-                    }
-
-                }
-            }
-        }
-
-        stage('Invalidate cache in cloudfront')
-    {
-            steps {
-                script {
-                    if (user_env_input == 'Production') {
-                        sh 'echo invalidate cache in Production env'
-                        
-                        
-                    }
-                    else if (user_env_input == 'Testing') {
-                        sh 'echo invalidate cache in Testing env'
-                       
-                        
-                    }
-                    else {
-                        sh 'echo invalidate cache in Development env'
-                         
-                       
-                    }
-
-                }
-            }
-    }
-
-     stage("clean ws")
-        {
-            steps{
-            cleanWs deleteDirs: true, notFailBuild: true
-        }
-        }
-
-
     }
 }
