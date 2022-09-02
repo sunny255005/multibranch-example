@@ -85,7 +85,7 @@ pipeline {
                         description:'Environment choices', name:'invalidate_cf_params', choices: 'Yes\nNo']
                     ])
                     
-                    parameters([booleanParam(defaultValue: true, description: 'Cloudfront  choice', name: 'invalidate_cf_params')])])
+                   
                     is_invalidate_cache_cloudfront=is_invalidate_cache_cloudfront_parameter
 
 
