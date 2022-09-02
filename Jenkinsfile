@@ -79,7 +79,7 @@ pipeline {
             }
         }
 
-    stage('Confirm for Invalidate Cache For CLOUDFRONT in ${user_env_input} environment') {
+    stage('Confirm for Invalidate Cache For CLOUDFRONT') {
             steps {
                script{
                if(is_invalidate_cache_cloudfront=='Yes')
@@ -111,10 +111,10 @@ pipeline {
             cleanWs deleteDirs: true, notFailBuild: true
         }
         }
-
             	}
             	else{
-            		stage("clean ws")
+            	stages{
+            	stage("clean ws")
         {
             steps{
             cleanWs deleteDirs: true, notFailBuild: true
@@ -125,6 +125,7 @@ pipeline {
         }
         }
         }
+
 
 
     }
