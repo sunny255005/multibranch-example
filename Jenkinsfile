@@ -96,9 +96,12 @@ pipeline {
 
                stage("Invalidating cache cloudfront")
                {
-                    when (params. invalidate_cf_params== 'yes') {
-        echo 'Excecuted only on master branch.'
-    }
+                   when {
+         expression { params.invalidate_cf_params == 'Yes' }
+     }
+     steps {
+         echo "Hello, bitwiseman!"
+     }
                }
 
 
