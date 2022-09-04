@@ -81,7 +81,7 @@ pipeline {
                  
                script{
                    def is_invalidate_cache_cloudfront_parameter = input(id: 'is_invalidate_cache_cloudfront', message: 'Do you want to invalidate cache in cloudfront?',
-                    parameters: [[$class: 'ChoiceParameterDefinition', defaultValue: 'Yes',
+                    parameters: [[$class: 'ChoiceParameterDefinition', defaultValue: 'No',
                         description:'Cloudfront choices', name:'invalidate_cf_params', choices: 'Yes\nNo']
                     ])
                     
