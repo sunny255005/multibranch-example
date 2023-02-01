@@ -5,6 +5,7 @@ pipeline {
     }
     environment {
         user_env_input = 'Development'
+        name='Souradip Manna'
     }
 
     stages {
